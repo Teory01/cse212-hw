@@ -1,19 +1,34 @@
 ﻿using System.Diagnostics;
 
+/// <summary>
+/// A static class containing different search algorithms and a method to run performance comparisons.
+/// </summary>
 public static class Search {
+    /// <summary>
+    /// Main execution method that runs the comparison between two search algorithms.
+    /// It displays a formatted table showing the performance metrics of both algorithms.
+    /// </summary>
     public static void Run() {
+        // Print header row with column names
+        // Format: n, sort1-count, sort2-count, sort1-time, sort2-time
         Console.WriteLine("{0,15}{1,15}{2,15}{3,15}{4,15}", "n", "sort1-count", "sort2-count", "sort1-time",
             "sort2-time");
+        // Print separator line for the table
+        // Each column is separated by 10 dashes
         Console.WriteLine("{0,15}{0,15}{0,15}{0,15}{0,15}", "----------");
 
         for (int n = 0; n <= 25000; n += 1000) {
             var testData = Enumerable.Range(0, n).ToArray();
+            // Create test data array with size n
             int count1 = SearchSorted1(testData, n);
             int count2 = SearchSorted2(testData, n, 0, testData.Length - 1);
             double time1 = Time(() => SearchSorted1(testData, n), 100);
             double time2 = Time(() => SearchSorted2(testData, n, 0, testData.Length - 1), 100);
+            // Time both algorithms by executing them 100 times each
             Console.WriteLine("{0,15}{1,15}{2,15}{3,15:0.00000}{4,15:0.00000}", n, count1, count2, time1, time2);
         }
+            // Print results for current n value
+            // Format: n, count1, count2, time1 (5 decimal places), time2 (5 decimal places)
     }
 
     private static double Time(Action executeAlgorithm, int times) {
