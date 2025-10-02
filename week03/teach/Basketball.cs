@@ -11,6 +11,9 @@
  * Each row represents the player's stats for a single season with a single team.
  */
 
+using System;
+using System.Collections.Generic;
+using System.Linq;
 using Microsoft.VisualBasic.FileIO;
 
 public class Basketball
@@ -23,14 +26,33 @@ public class Basketball
         reader.TextFieldType = FieldType.Delimited;
         reader.SetDelimiters(",");
         reader.ReadFields(); // ignore header row
-        while (!reader.EndOfData) {
+
+        while (!reader.EndOfData)
+        {
             var fields = reader.ReadFields()!;
             var playerId = fields[0];
             var points = int.Parse(fields[8]);
+
+            if (players.ContainsKey(playerId))
+            {
+                players[playerId] += points;
+            }
+            else
+            {
+                players[playerId] = points;
+            }
         }
 
-        Console.WriteLine($"Players: {{{string.Join(", ", players)}}}");
+        // Convert to array and sort descending by points
+        var topPlayers = players
+            .OrderByDescending(p => p.Value)
+            .Take(10)
+            .ToArray();
 
-        var topPlayers = new string[10];
+        Console.WriteLine("Top 10 Players by Total Points:");
+        for (int i = 0; i < topPlayers.Length; i++)
+        {
+            Console.WriteLine($"{i + 1}. {topPlayers[i].Key} - {topPlayers[i].Value} points");
+        }
     }
 }
